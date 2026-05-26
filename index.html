@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commit 命名小工具</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f3;
+      --panel: #ffffff;
+      --text: #1d2327;
+      --muted: #66717a;
+      --line: #dde3e0;
+      --shadow: 0 20px 60px rgba(28, 36, 42, 0.12);
+      --accent: #0f766e;
+      --accent-strong: #0b5f59;
+      --danger: #b42318;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 34%),
+        linear-gradient(225deg, rgba(180, 83, 9, 0.08), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Microsoft JhengHei", "PingFang TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1180px, calc(100vw - 96px));
+      margin: 0 auto;
+      height: 100vh;
+      padding: 22px 0;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(24px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 14px;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 20px;
+      align-items: start;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(221, 227, 224, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .section {
+      margin-bottom: 16px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .label-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    label,
+    .section-title {
+      display: block;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .hint,
+    .counter {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: 31px;
+      gap: 11px;
+      min-height: 258px;
+      padding: 14px 10px 10px;
+      border: 1px dashed rgba(102, 113, 122, 0.22);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(rgba(29, 35, 39, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29, 35, 39, 0.028) 1px, transparent 1px),
+        rgba(255, 255, 255, 0.46);
+      background-size: 24px 24px;
+    }
+
+    .type-button {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 3px;
+      padding: 16px 15px 11px;
+      color: #18202a;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      box-shadow:
+        0 14px 24px rgba(31, 41, 55, 0.12),
+        0 2px 4px rgba(31, 41, 55, 0.08);
+      transform: rotate(var(--tilt));
+      transform-origin: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .type-button::before {
+      content: "";
+      width: 50px;
+      height: 14px;
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: 0 1px 3px rgba(31, 41, 55, 0.08);
+      transform: translateX(-50%) rotate(calc(var(--tilt) * -0.7));
+    }
+
+    .type-button:hover {
+      filter: saturate(1.05);
+      transform: translateY(-4px) rotate(var(--tilt));
+      box-shadow:
+        0 20px 34px rgba(31, 41, 55, 0.16),
+        0 4px 8px rgba(31, 41, 55, 0.1);
+    }
+
+    .type-button[aria-pressed="true"] {
+      box-shadow:
+        0 0 0 3px #18202a,
+        0 22px 38px rgba(31, 41, 55, 0.18),
+        0 4px 8px rgba(31, 41, 55, 0.1);
+      transform: translateY(-4px) rotate(var(--tilt));
+    }
+
+    .type-button[aria-pressed="true"]::after {
+      content: "";
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      position: absolute;
+      top: 9px;
+      right: 10px;
+      border-radius: 50%;
+      background: #18202a;
+      box-shadow:
+        inset 0 0 0 4px rgba(255, 255, 255, 0.55),
+        0 2px 6px rgba(31, 41, 55, 0.22);
+    }
+
+    .type-name {
+      display: block;
+      margin-bottom: 2px;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .type-desc {
+      display: block;
+      color: rgba(22, 32, 35, 0.68);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .type-button:nth-child(1) {
+      grid-column: 1 / span 5;
+      grid-row: 1 / span 3;
+      --tilt: -2.2deg;
+    }
+
+    .type-button:nth-child(2) {
+      grid-column: 7 / span 5;
+      grid-row: 2 / span 3;
+      --tilt: 1.4deg;
+    }
+
+    .type-button:nth-child(3) {
+      grid-column: 2 / span 5;
+      grid-row: 5 / span 3;
+      --tilt: 1.8deg;
+    }
+
+    .type-button:nth-child(4) {
+      grid-column: 7 / span 5;
+      grid-row: 6 / span 3;
+      --tilt: -1.1deg;
+    }
+
+    .type-button:nth-child(5) {
+      grid-column: 1 / span 5;
+      grid-row: 9 / span 3;
+      --tilt: 1.2deg;
+    }
+
+    .type-button:nth-child(6) {
+      grid-column: 7 / span 5;
+      grid-row: 10 / span 3;
+      --tilt: -1.8deg;
+    }
+
+    .tone-fixed { background: #ffd6df; }
+    .tone-feat { background: #d9f99d; }
+    .tone-refactor { background: #bae6fd; }
+    .tone-style { background: #fed7aa; }
+    .tone-docs { background: #e9d5ff; }
+    .tone-chore { background: #e2e8f0; }
+
+    .tone-fixed .type-name,
+    .tone-feat .type-name,
+    .tone-refactor .type-name,
+    .tone-style .type-name,
+    .tone-docs .type-name,
+    .tone-chore .type-name {
+      color: #18202a;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input {
+      height: 42px;
+      padding: 0 12px;
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+      padding: 12px;
+    }
+
+    .details-grid textarea {
+      min-height: 132px;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.13);
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .input-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 108px;
+      gap: 10px;
+    }
+
+    .preview {
+      display: grid;
+      gap: 14px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .rule-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rule-builder {
+      min-height: 112px;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f9faf8;
+    }
+
+    .rule-builder.is-over {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.11);
+    }
+
+    .block-palette,
+    .rule-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .rule-actions {
+      justify-content: space-between;
+    }
+
+    .rule-block,
+    .palette-block,
+    .add-text-button,
+    .reset-rule-button {
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: #344047;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .rule-block,
+    .palette-block {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .rule-block {
+      min-height: 42px;
+      background: #fff;
+      box-shadow: 0 3px 8px rgba(31, 41, 55, 0.08);
+      cursor: grab;
+      padding: 6px 8px;
+    }
+
+    .rule-block.is-dragging {
+      opacity: 0.46;
+    }
+
+    .palette-block {
+      background: #eef7f5;
+      border-color: #b9dad5;
+      color: #0f5f58;
+    }
+
+    .text-block {
+      background: #fff7ed;
+      border-color: #fed7aa;
+      color: #7c2d12;
+      cursor: grab;
+    }
+
+    .block-label {
+      min-width: 88px;
+      font-weight: 800;
+    }
+
+    .block-value {
+      flex: 1 1 auto;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .block-text-input {
+      flex: 1 1 auto;
+      height: 30px;
+      min-width: 120px;
+      border-radius: 6px;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .move-button,
+    .block-remove {
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(17, 24, 39, 0.08);
+      color: #344047;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .move-button {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .move-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .add-text-button,
+    .reset-rule-button {
+      background: #f9faf8;
+    }
+
+    .rule-block:hover,
+    .palette-block:hover,
+    .add-text-button:hover,
+    .reset-rule-button:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .rule-help {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .result {
+      min-height: 128px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f9faf8;
+      color: #111827;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      font-family: Consolas, "Cascadia Mono", monospace;
+      font-size: 15px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .copy-button,
+    .paste-button {
+      min-height: 42px;
+      border: 0;
+      border-radius: var(--radius);
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .copy-button {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .paste-button {
+      background: #18202a;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .copy-button:hover,
+    .paste-button:hover {
+      background: var(--accent-strong);
+      transform: translateY(-1px);
+    }
+
+    .paste-button:hover {
+      background: #0f172a;
+    }
+
+    .copy-button:disabled {
+      background: #9aa7a4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      min-height: 20px;
+      margin: 0;
+      color: var(--accent-strong);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .warning {
+      color: var(--danger);
+    }
+
+    @media (max-width: 860px) {
+      body {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+      }
+
+      .app {
+        width: min(100vw - 24px, 680px);
+        padding: 28px 0;
+        height: auto;
+        min-height: 100vh;
+        transform: none;
+      }
+
+      .topbar {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .preview {
+        position: static;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .panel {
+        padding: 16px;
+      }
+
+      .type-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 104px;
+        min-height: auto;
+        gap: 16px;
+      }
+
+      .type-button:nth-child(n) {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .input-action {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Commit 命名小工具</h1>
+        <p class="subtitle">貼 Todo 網址、選 type、填內容，直接產生公司格式。</p>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="panel form-panel" aria-label="Commit form">
+        <div class="section">
+          <div class="label-row">
+            <span class="section-title">Type</span>
+            <span class="hint">目前選擇：<strong id="selectedTypeLabel">fixed</strong></span>
+          </div>
+          <div class="type-grid" id="typeGrid"></div>
+        </div>
+
+        <div class="details-grid">
+          <div class="section field-stack">
+            <div class="label-row">
+              <label for="todoInput">Todo 號或網址</label>
+              <span class="hint">會自動抓 showTodoDetail</span>
+            </div>
+            <div class="input-action">
+              <input id="todoInput" type="text" autocomplete="off" placeholder="https://www.otispm.com/...showTodoDetail=212614" />
+              <button class="paste-button" id="pasteButton" type="button">貼上網址</button>
+            </div>
+          </div>
+
+          <div class="section field-stack">
+            <div class="label-row">
+              <label for="messageInput">Commit 內容</label>
+              <span class="counter"><span id="messageLength">0</span> 字</span>
+            </div>
+            <textarea id="messageInput" placeholder="SIT issue -FormFile 升版跑版 - 閒置過久提示訊息按鈕跑版"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel preview" aria-label="Commit preview">
+        <div class="rule-card">
+          <div class="label-row">
+            <span class="section-title">Commit 規則</span>
+            <span class="hint">拖曳或用左右鍵調整</span>
+          </div>
+          <div class="block-palette" aria-label="可加入欄位">
+            <button class="palette-block" type="button" draggable="true" data-kind="type">加入 type</button>
+            <button class="palette-block" type="button" draggable="true" data-kind="todo">加入 todo 號</button>
+            <button class="palette-block" type="button" draggable="true" data-kind="message">加入 commit 內容</button>
+          </div>
+          <div class="rule-builder" id="ruleBuilder" aria-label="目前 commit 規則"></div>
+          <div class="rule-actions">
+            <button class="add-text-button" id="addTextButton" type="button">加入固定文字</button>
+            <button class="reset-rule-button" id="resetRuleButton" type="button">恢復預設</button>
+          </div>
+          <p class="rule-help">固定文字可直接改，例如「: Todo#」。上到下就是最後輸出的順序。</p>
+        </div>
+
+        <div>
+          <div class="label-row">
+            <span class="section-title">預覽</span>
+            <span class="counter">整句 <span id="commitLength">0</span> 字</span>
+          </div>
+          <div class="result" id="resultText" aria-live="polite"></div>
+        </div>
+        <div class="actions">
+          <button class="copy-button" id="copyButton" type="button">一鍵複製</button>
+          <p class="status" id="copyStatus"></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const commitTypes = [
+      {
+        name: "fixed",
+        className: "tone-fixed",
+        description: "修 bug、SIT/UAT issue、畫面跑版、例外錯誤"
+      },
+      {
+        name: "feat",
+        className: "tone-feat",
+        description: "新增功能、流程、欄位或使用者看得到的能力"
+      },
+      {
+        name: "refactor",
+        className: "tone-refactor",
+        description: "整理程式結構，不改變既有功能行為"
+      },
+      {
+        name: "style",
+        className: "tone-style",
+        description: "格式、CSS、排版細節，偏視覺或程式碼風格"
+      },
+      {
+        name: "docs",
+        className: "tone-docs",
+        description: "文件、註解、README 或說明文字"
+      },
+      {
+        name: "chore",
+        className: "tone-chore",
+        description: "設定、套件、建置、環境或例行維護"
+      }
+    ];
+
+    const typeGrid = document.querySelector("#typeGrid");
+    const selectedTypeLabel = document.querySelector("#selectedTypeLabel");
+    const todoInput = document.querySelector("#todoInput");
+    const pasteButton = document.querySelector("#pasteButton");
+    const messageInput = document.querySelector("#messageInput");
+    const messageLength = document.querySelector("#messageLength");
+    const commitLength = document.querySelector("#commitLength");
+    const resultText = document.querySelector("#resultText");
+    const ruleBuilder = document.querySelector("#ruleBuilder");
+    const addTextButton = document.querySelector("#addTextButton");
+    const resetRuleButton = document.querySelector("#resetRuleButton");
+    const copyButton = document.querySelector("#copyButton");
+    const copyStatus = document.querySelector("#copyStatus");
+    const paletteBlocks = document.querySelectorAll(".palette-block");
+
+    const defaultBlocks = [
+      { kind: "type" },
+      { kind: "text", value: ": Todo#" },
+      { kind: "todo" },
+      { kind: "text", value: " " },
+      { kind: "message" }
+    ];
+    const oldRuleStorageKey = "commit-helper-rule";
+    const blockStorageKey = "commit-helper-rule-blocks";
+    const blockLabels = {
+      type: "Type",
+      todo: "Todo 號",
+      message: "Commit 內容"
+    };
+    const blockExamples = {
+      type: "目前選到的 type",
+      todo: "從網址抓到的號碼",
+      message: "下方輸入的內容"
+    };
+    let selectedType = "fixed";
+    let ruleBlocks = loadRuleBlocks();
+    let draggedIndex = null;
+
+    function getTodoNumber(value) {
+      const text = value.trim();
+
+      if (!text) {
+        return "";
+      }
+
+      try {
+        const url = new URL(text);
+        const fromSearch = url.searchParams.get("showTodoDetail");
+
+        if (fromSearch) {
+          return fromSearch.match(/\d+/)?.[0] || "";
+        }
+      } catch (error) {
+        // Plain Todo IDs are valid input too.
+      }
+
+      const detailMatch = text.match(/showTodoDetail=(\d+)/i);
+
+      if (detailMatch) {
+        return detailMatch[1];
+      }
+
+      return text.match(/\d+/)?.[0] || "";
+    }
+
+    function buildCommit() {
+      const todoNumber = getTodoNumber(todoInput.value);
+      const message = messageInput.value.trim();
+      const values = {
+        type: selectedType,
+        todo: todoNumber,
+        message
+      };
+
+      return ruleBlocks
+        .map((block) => block.kind === "text" ? block.value : values[block.kind])
+        .join("")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function updatePreview() {
+      const commit = buildCommit();
+      const message = messageInput.value.trim();
+      const todoNumber = getTodoNumber(todoInput.value);
+
+      selectedTypeLabel.textContent = selectedType;
+      messageLength.textContent = String(message.length);
+      commitLength.textContent = String(commit.length);
+      resultText.textContent = commit;
+      copyButton.disabled = !commit;
+      copyStatus.textContent = "";
+      copyStatus.classList.remove("warning");
+    }
+
+    function renderTypes() {
+      typeGrid.innerHTML = "";
+
+      commitTypes.forEach((type) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `type-button ${type.className}`;
+        button.setAttribute("aria-pressed", String(type.name === selectedType));
+        button.innerHTML = `
+          <span class="type-name">${type.name}</span>
+          <span class="type-desc">${type.description}</span>
+        `;
+        button.addEventListener("click", () => {
+          selectedType = type.name;
+          renderTypes();
+          updatePreview();
+        });
+        typeGrid.appendChild(button);
+      });
+    }
+
+    function cloneDefaultBlocks() {
+      return defaultBlocks.map((block) => ({ ...block }));
+    }
+
+    function loadRuleBlocks() {
+      const saved = localStorage.getItem(blockStorageKey);
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        } catch (error) {
+          localStorage.removeItem(blockStorageKey);
+        }
+      }
+
+      const oldRule = localStorage.getItem(oldRuleStorageKey);
+
+      if (oldRule) {
+        localStorage.removeItem(oldRuleStorageKey);
+      }
+
+      return cloneDefaultBlocks();
+    }
+
+    function saveRule() {
+      localStorage.setItem(blockStorageKey, JSON.stringify(ruleBlocks));
+    }
+
+    function resetRule() {
+      ruleBlocks = cloneDefaultBlocks();
+      saveRule();
+      renderRuleBlocks();
+      updatePreview();
+    }
+
+    function addRuleBlock(kind, insertIndex = ruleBlocks.length) {
+      const block = kind === "text" ? { kind: "text", value: "文字" } : { kind };
+      ruleBlocks.splice(insertIndex, 0, block);
+      saveRule();
+      renderRuleBlocks();
+      updatePreview();
+    }
+
+    function removeRuleBlock(index) {
+      ruleBlocks.splice(index, 1);
+      saveRule();
+      renderRuleBlocks();
+      updatePreview();
+    }
+
+    function shiftRuleBlock(index, direction) {
+      const nextIndex = index + direction;
+
+      if (nextIndex < 0 || nextIndex >= ruleBlocks.length) {
+        return;
+      }
+
+      const [block] = ruleBlocks.splice(index, 1);
+      ruleBlocks.splice(nextIndex, 0, block);
+      saveRule();
+      renderRuleBlocks();
+      updatePreview();
+    }
+
+    function getDropIndex(event) {
+      const blocks = [...ruleBuilder.querySelectorAll(".rule-block")];
+      const target = blocks.find((block) => {
+        const rect = block.getBoundingClientRect();
+        return event.clientY < rect.top + rect.height / 2;
+      });
+
+      return target ? Number(target.dataset.index) : ruleBlocks.length;
+    }
+
+    function moveRuleBlock(fromIndex, toIndex) {
+      if (fromIndex === null || fromIndex === toIndex) {
+        return;
+      }
+
+      const [block] = ruleBlocks.splice(fromIndex, 1);
+      const adjustedIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+      ruleBlocks.splice(adjustedIndex, 0, block);
+      draggedIndex = null;
+      saveRule();
+      renderRuleBlocks();
+      updatePreview();
+    }
+
+    function renderRuleBlocks() {
+      ruleBuilder.innerHTML = "";
+
+      ruleBlocks.forEach((block, index) => {
+        const wrapper = document.createElement("span");
+        wrapper.className = `rule-block ${block.kind === "text" ? "text-block" : ""}`;
+        wrapper.draggable = true;
+        wrapper.dataset.index = String(index);
+        wrapper.title = "拖曳調整順序";
+
+        const label = document.createElement("span");
+        label.className = "block-label";
+        label.textContent = block.kind === "text" ? "固定文字" : blockLabels[block.kind];
+        wrapper.appendChild(label);
+
+        if (block.kind === "text") {
+          const input = document.createElement("input");
+          input.className = "block-text-input";
+          input.value = block.value;
+          input.placeholder = "輸入固定文字";
+          input.addEventListener("input", () => {
+            ruleBlocks[index].value = input.value;
+            saveRule();
+            updatePreview();
+          });
+          input.addEventListener("dragstart", (event) => event.preventDefault());
+          wrapper.appendChild(input);
+        } else {
+          const value = document.createElement("span");
+          value.className = "block-value";
+          value.textContent = blockExamples[block.kind];
+          wrapper.appendChild(value);
+        }
+
+        const leftButton = document.createElement("button");
+        leftButton.type = "button";
+        leftButton.className = "move-button";
+        leftButton.textContent = "↑";
+        leftButton.title = "往前";
+        leftButton.disabled = index === 0;
+        leftButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          shiftRuleBlock(index, -1);
+        });
+        wrapper.appendChild(leftButton);
+
+        const rightButton = document.createElement("button");
+        rightButton.type = "button";
+        rightButton.className = "move-button";
+        rightButton.textContent = "↓";
+        rightButton.title = "往後";
+        rightButton.disabled = index === ruleBlocks.length - 1;
+        rightButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          shiftRuleBlock(index, 1);
+        });
+        wrapper.appendChild(rightButton);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "block-remove";
+        removeButton.textContent = "×";
+        removeButton.title = "移除";
+        removeButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+          removeRuleBlock(index);
+        });
+        wrapper.appendChild(removeButton);
+
+        wrapper.addEventListener("dragstart", (event) => {
+          draggedIndex = index;
+          wrapper.classList.add("is-dragging");
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", `move:${index}`);
+        });
+
+        wrapper.addEventListener("dragend", () => {
+          draggedIndex = null;
+          wrapper.classList.remove("is-dragging");
+          ruleBuilder.classList.remove("is-over");
+        });
+
+        ruleBuilder.appendChild(wrapper);
+      });
+    }
+
+    async function copyCommit() {
+      const commit = buildCommit();
+
+      if (!commit) {
+        copyStatus.textContent = "目前沒有可複製的內容。";
+        copyStatus.classList.add("warning");
+        return;
+      }
+
+      try {
+        if (!navigator.clipboard || !window.isSecureContext) {
+          throw new Error("Clipboard API is unavailable.");
+        }
+
+        await navigator.clipboard.writeText(commit);
+        copyStatus.textContent = "已複製到剪貼簿。";
+      } catch (error) {
+        const fallback = document.createElement("textarea");
+        fallback.value = commit;
+        fallback.setAttribute("readonly", "");
+        fallback.style.position = "fixed";
+        fallback.style.left = "-9999px";
+        document.body.appendChild(fallback);
+        fallback.select();
+        fallback.setSelectionRange(0, fallback.value.length);
+
+        const didCopy = document.execCommand("copy");
+        document.body.removeChild(fallback);
+
+        if (didCopy) {
+          copyStatus.textContent = "已複製到剪貼簿。";
+        } else {
+          const range = document.createRange();
+          range.selectNodeContents(resultText);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          copyStatus.textContent = "已選取文字，請按 Ctrl+C 複製。";
+          copyStatus.classList.add("warning");
+        }
+      }
+    }
+
+    async function pasteTodoUrl() {
+      copyStatus.textContent = "";
+      copyStatus.classList.remove("warning");
+
+      try {
+        const text = await navigator.clipboard.readText();
+        todoInput.value = text.trim();
+        updatePreview();
+        todoInput.focus();
+        copyStatus.textContent = "已貼上剪貼簿網址。";
+      } catch (error) {
+        todoInput.focus();
+        copyStatus.textContent = "瀏覽器不允許自動貼上，請按 Ctrl+V。";
+        copyStatus.classList.add("warning");
+      }
+    }
+
+    todoInput.addEventListener("input", updatePreview);
+    messageInput.addEventListener("input", updatePreview);
+    addTextButton.addEventListener("click", () => addRuleBlock("text"));
+    resetRuleButton.addEventListener("click", resetRule);
+    paletteBlocks.forEach((button) => {
+      button.addEventListener("click", () => addRuleBlock(button.dataset.kind));
+      button.addEventListener("dragstart", (event) => {
+        event.dataTransfer.effectAllowed = "copy";
+        event.dataTransfer.setData("text/plain", `new:${button.dataset.kind}`);
+      });
+    });
+    ruleBuilder.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      ruleBuilder.classList.add("is-over");
+    });
+    ruleBuilder.addEventListener("dragleave", () => {
+      ruleBuilder.classList.remove("is-over");
+    });
+    ruleBuilder.addEventListener("drop", (event) => {
+      event.preventDefault();
+      ruleBuilder.classList.remove("is-over");
+
+      const data = event.dataTransfer.getData("text/plain");
+      const dropIndex = getDropIndex(event);
+
+      if (data.startsWith("new:")) {
+        addRuleBlock(data.replace("new:", ""), dropIndex);
+        return;
+      }
+
+      if (data.startsWith("move:")) {
+        moveRuleBlock(Number(data.replace("move:", "")), dropIndex);
+      }
+    });
+    copyButton.addEventListener("click", copyCommit);
+    pasteButton.addEventListener("click", pasteTodoUrl);
+
+    renderTypes();
+    renderRuleBlocks();
+    updatePreview();
+  </script>
+</body>
+</html>
