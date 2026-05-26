@@ -25,9 +25,14 @@
 
     body {
       margin: 0;
+<<<<<<< HEAD
       min-height: 100vh;
       min-height: 100dvh;
       overflow: auto;
+=======
+      height: 100vh;
+      overflow: hidden;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       background:
         linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 34%),
         linear-gradient(225deg, rgba(180, 83, 9, 0.08), transparent 30%),
@@ -44,6 +49,7 @@
     }
 
     .app {
+<<<<<<< HEAD
       width: min(1240px, calc(100vw - 48px));
       margin: 0 auto;
       min-height: 100vh;
@@ -51,6 +57,15 @@
       padding: 14px 0;
       display: flex;
       flex-direction: column;
+=======
+      width: min(1180px, calc(100vw - 96px));
+      margin: 0 auto;
+      height: 100vh;
+      padding: 22px 0;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(24px);
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .topbar {
@@ -58,13 +73,22 @@
       align-items: end;
       justify-content: space-between;
       gap: 24px;
+<<<<<<< HEAD
       margin-bottom: 10px;
+=======
+      margin-bottom: 14px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       flex: 0 0 auto;
     }
 
     h1 {
+<<<<<<< HEAD
       margin: 0 0 3px;
       font-size: clamp(24px, 3vw, 36px);
+=======
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 44px);
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       line-height: 1.05;
       letter-spacing: 0;
     }
@@ -72,13 +96,21 @@
     .subtitle {
       margin: 0;
       color: var(--muted);
+<<<<<<< HEAD
       font-size: 14px;
+=======
+      font-size: 15px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 420px;
+<<<<<<< HEAD
       gap: 16px;
+=======
+      gap: 20px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       align-items: start;
       min-height: 0;
       flex: 1 1 auto;
@@ -89,12 +121,20 @@
       border: 1px solid rgba(221, 227, 224, 0.9);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+<<<<<<< HEAD
       padding: 16px;
+=======
+      padding: 20px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       backdrop-filter: blur(12px);
     }
 
     .section {
+<<<<<<< HEAD
       margin-bottom: 12px;
+=======
+      margin-bottom: 16px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .section:last-child {
@@ -104,6 +144,7 @@
     .details-grid {
       display: grid;
       grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr);
+<<<<<<< HEAD
       gap: 12px;
       align-items: start;
     }
@@ -177,6 +218,12 @@
       transform: translateX(20px);
     }
 
+=======
+      gap: 16px;
+      align-items: start;
+    }
+
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     .label-row {
       display: flex;
       align-items: baseline;
@@ -200,10 +247,18 @@
 
     .type-grid {
       display: grid;
+<<<<<<< HEAD
       grid-template-columns: repeat(3, minmax(0, 1fr));
       grid-auto-rows: clamp(74px, 10.5vh, 88px);
       gap: 12px;
       padding: 14px 12px 12px;
+=======
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: 31px;
+      gap: 11px;
+      min-height: 258px;
+      padding: 14px 10px 10px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       border: 1px dashed rgba(102, 113, 122, 0.22);
       border-radius: var(--radius);
       background:
@@ -218,7 +273,11 @@
       height: 100%;
       border: 0;
       border-radius: 3px;
+<<<<<<< HEAD
       padding: 11px 12px 8px;
+=======
+      padding: 16px 15px 11px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       color: #18202a;
       text-align: left;
       cursor: pointer;
@@ -227,7 +286,11 @@
       justify-content: center;
       position: relative;
       box-shadow:
+<<<<<<< HEAD
         0 10px 18px rgba(31, 41, 55, 0.11),
+=======
+        0 14px 24px rgba(31, 41, 55, 0.12),
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
         0 2px 4px rgba(31, 41, 55, 0.08);
       transform: rotate(var(--tilt));
       transform-origin: center;
@@ -236,10 +299,17 @@
 
     .type-button::before {
       content: "";
+<<<<<<< HEAD
       width: 42px;
       height: 11px;
       position: absolute;
       top: -6px;
+=======
+      width: 50px;
+      height: 14px;
+      position: absolute;
+      top: -8px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       left: 50%;
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.58);
@@ -283,38 +353,76 @@
       display: block;
       margin-bottom: 2px;
       font-weight: 800;
+<<<<<<< HEAD
       font-size: 15px;
+=======
+      font-size: 18px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       line-height: 1.1;
     }
 
     .type-desc {
       display: block;
       color: rgba(22, 32, 35, 0.68);
+<<<<<<< HEAD
       font-size: 11px;
+=======
+      font-size: 13px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       line-height: 1.35;
     }
 
     .type-button:nth-child(1) {
+<<<<<<< HEAD
+=======
+      grid-column: 1 / span 5;
+      grid-row: 1 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: -2.2deg;
     }
 
     .type-button:nth-child(2) {
+<<<<<<< HEAD
+=======
+      grid-column: 7 / span 5;
+      grid-row: 2 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: 1.4deg;
     }
 
     .type-button:nth-child(3) {
+<<<<<<< HEAD
+=======
+      grid-column: 2 / span 5;
+      grid-row: 5 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: 1.8deg;
     }
 
     .type-button:nth-child(4) {
+<<<<<<< HEAD
+=======
+      grid-column: 7 / span 5;
+      grid-row: 6 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: -1.1deg;
     }
 
     .type-button:nth-child(5) {
+<<<<<<< HEAD
+=======
+      grid-column: 1 / span 5;
+      grid-row: 9 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: 1.2deg;
     }
 
     .type-button:nth-child(6) {
+<<<<<<< HEAD
+=======
+      grid-column: 7 / span 5;
+      grid-row: 10 / span 3;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       --tilt: -1.8deg;
     }
 
@@ -346,18 +454,30 @@
     }
 
     input {
+<<<<<<< HEAD
       height: 38px;
+=======
+      height: 42px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       padding: 0 12px;
     }
 
     textarea {
+<<<<<<< HEAD
       min-height: 94px;
+=======
+      min-height: 112px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       resize: vertical;
       padding: 12px;
     }
 
     .details-grid textarea {
+<<<<<<< HEAD
       min-height: 104px;
+=======
+      min-height: 132px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     input:focus,
@@ -368,20 +488,34 @@
 
     .field-stack {
       display: grid;
+<<<<<<< HEAD
       gap: 8px;
+=======
+      gap: 10px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .input-action {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 108px;
+<<<<<<< HEAD
       gap: 8px;
+=======
+      gap: 10px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .preview {
       display: grid;
+<<<<<<< HEAD
       gap: 12px;
       position: sticky;
       top: 14px;
+=======
+      gap: 14px;
+      position: sticky;
+      top: 18px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     }
 
     .rule-card {
@@ -389,6 +523,7 @@
       gap: 10px;
     }
 
+<<<<<<< HEAD
     .rule-toggle {
       width: 100%;
       min-height: 34px;
@@ -450,6 +585,8 @@
       transform: translateY(0);
     }
 
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     .rule-builder {
       min-height: 112px;
       display: grid;
@@ -593,8 +730,13 @@
     }
 
     .result {
+<<<<<<< HEAD
       min-height: 118px;
       padding: 14px;
+=======
+      min-height: 128px;
+      padding: 16px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: #f9faf8;
@@ -613,7 +755,11 @@
 
     .copy-button,
     .paste-button {
+<<<<<<< HEAD
       min-height: 38px;
+=======
+      min-height: 42px;
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       border: 0;
       border-radius: var(--radius);
       font-weight: 800;
@@ -660,6 +806,7 @@
       color: var(--danger);
     }
 
+<<<<<<< HEAD
     @media (min-width: 1500px) {
       .app {
         width: min(1440px, calc(100vw - 80px));
@@ -711,6 +858,8 @@
       }
     }
 
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     @media (max-width: 860px) {
       body {
         height: auto;
@@ -786,6 +935,7 @@
           <div class="type-grid" id="typeGrid"></div>
         </div>
 
+<<<<<<< HEAD
         <div class="mode-row">
           <span class="section-title">Todo 號</span>
           <label class="switch" for="todoModeToggle">
@@ -797,6 +947,10 @@
 
         <div class="details-grid">
           <div class="section field-stack todo-section">
+=======
+        <div class="details-grid">
+          <div class="section field-stack">
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
             <div class="label-row">
               <label for="todoInput">Todo 號或網址</label>
               <span class="hint">會自動抓 showTodoDetail</span>
@@ -819,6 +973,7 @@
 
       <aside class="panel preview" aria-label="Commit preview">
         <div class="rule-card">
+<<<<<<< HEAD
           <button class="rule-toggle" id="ruleToggle" type="button" aria-expanded="false">
             <span class="rule-toggle-label">Commit 規則</span>
             <span class="rule-toggle-state" id="ruleToggleState">展開</span>
@@ -839,6 +994,23 @@
             </div>
             <p class="rule-help">固定文字可直接改，例如「: Todo#」。上到下就是最後輸出的順序。</p>
           </div>
+=======
+          <div class="label-row">
+            <span class="section-title">Commit 規則</span>
+            <span class="hint">拖曳或用左右鍵調整</span>
+          </div>
+          <div class="block-palette" aria-label="可加入欄位">
+            <button class="palette-block" type="button" draggable="true" data-kind="type">加入 type</button>
+            <button class="palette-block" type="button" draggable="true" data-kind="todo">加入 todo 號</button>
+            <button class="palette-block" type="button" draggable="true" data-kind="message">加入 commit 內容</button>
+          </div>
+          <div class="rule-builder" id="ruleBuilder" aria-label="目前 commit 規則"></div>
+          <div class="rule-actions">
+            <button class="add-text-button" id="addTextButton" type="button">加入固定文字</button>
+            <button class="reset-rule-button" id="resetRuleButton" type="button">恢復預設</button>
+          </div>
+          <p class="rule-help">固定文字可直接改，例如「: Todo#」。上到下就是最後輸出的順序。</p>
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
         </div>
 
         <div>
@@ -891,19 +1063,26 @@
     ];
 
     const typeGrid = document.querySelector("#typeGrid");
+<<<<<<< HEAD
     const formPanel = document.querySelector(".form-panel");
     const selectedTypeLabel = document.querySelector("#selectedTypeLabel");
     const todoModeToggle = document.querySelector("#todoModeToggle");
     const todoModeText = document.querySelector("#todoModeText");
+=======
+    const selectedTypeLabel = document.querySelector("#selectedTypeLabel");
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     const todoInput = document.querySelector("#todoInput");
     const pasteButton = document.querySelector("#pasteButton");
     const messageInput = document.querySelector("#messageInput");
     const messageLength = document.querySelector("#messageLength");
     const commitLength = document.querySelector("#commitLength");
     const resultText = document.querySelector("#resultText");
+<<<<<<< HEAD
     const ruleCard = document.querySelector(".rule-card");
     const ruleToggle = document.querySelector("#ruleToggle");
     const ruleToggleState = document.querySelector("#ruleToggleState");
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     const ruleBuilder = document.querySelector("#ruleBuilder");
     const addTextButton = document.querySelector("#addTextButton");
     const resetRuleButton = document.querySelector("#resetRuleButton");
@@ -920,7 +1099,10 @@
     ];
     const oldRuleStorageKey = "commit-helper-rule";
     const blockStorageKey = "commit-helper-rule-blocks";
+<<<<<<< HEAD
     const todoModeStorageKey = "commit-helper-use-todo";
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     const blockLabels = {
       type: "Type",
       todo: "Todo 號",
@@ -932,7 +1114,10 @@
       message: "下方輸入的內容"
     };
     let selectedType = "fixed";
+<<<<<<< HEAD
     let useTodo = localStorage.getItem(todoModeStorageKey) !== "false";
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     let ruleBlocks = loadRuleBlocks();
     let draggedIndex = null;
 
@@ -966,11 +1151,14 @@
     function buildCommit() {
       const todoNumber = getTodoNumber(todoInput.value);
       const message = messageInput.value.trim();
+<<<<<<< HEAD
 
       if (!useTodo) {
         return `${selectedType}: ${message}`.trim();
       }
 
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
       const values = {
         type: selectedType,
         todo: todoNumber,
@@ -998,6 +1186,7 @@
       copyStatus.classList.remove("warning");
     }
 
+<<<<<<< HEAD
     function applyTodoMode() {
       formPanel.classList.toggle("todo-disabled", !useTodo);
       document.querySelector(".preview").classList.toggle("todo-disabled", !useTodo);
@@ -1007,6 +1196,8 @@
       updatePreview();
     }
 
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     function renderTypes() {
       typeGrid.innerHTML = "";
 
@@ -1268,6 +1459,7 @@
 
     todoInput.addEventListener("input", updatePreview);
     messageInput.addEventListener("input", updatePreview);
+<<<<<<< HEAD
     todoModeToggle.addEventListener("change", () => {
       useTodo = todoModeToggle.checked;
       applyTodoMode();
@@ -1277,6 +1469,8 @@
       ruleToggle.setAttribute("aria-expanded", String(isOpen));
       ruleToggleState.textContent = isOpen ? "收合" : "展開";
     });
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     addTextButton.addEventListener("click", () => addRuleBlock("text"));
     resetRuleButton.addEventListener("click", resetRule);
     paletteBlocks.forEach((button) => {
@@ -1314,7 +1508,10 @@
 
     renderTypes();
     renderRuleBlocks();
+<<<<<<< HEAD
     applyTodoMode();
+=======
+>>>>>>> 50d25b47cd8297ef3899a936a0eee2f5f06a31ae
     updatePreview();
   </script>
 </body>
